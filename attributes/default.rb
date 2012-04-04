@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
-default['logstash']['version']  = "1.0.17"
-default['logstash']['checksum'] = "caba048cb1ab3cc608d4569246f8b7effbb8272865c7864a662566c30517316c"
+default['logstash']['version']  = '1.1.0'
+default['logstash']['checksum'] = '357c01ae09aa4611e31347238d762729'
 
-default['logstash']['install_path'] = "/srv/logstash"
+default['logstash']['install_path'] = '/opt/logstash'
 default['logstash']['config_path']  = "/etc/logstash"
 default['logstash']['log_path']     = "/var/log/logstash"
 default['logstash']['pattern_path'] = nil # if you have grok installed, you can set this and the agent will use it
