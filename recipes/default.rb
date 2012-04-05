@@ -112,7 +112,13 @@ node['logstash']['component'].each do |component|
     end
 
   when 'runit'
-    runit_service "logstash-#{component}"  
+    runit_service "logstash-#{component}"
+
+  when 'upstart'
+    service "logstash-#{component}" do
+      provider Chef::Provider::Service::Upstart
+    end
+
   else
     service "logstash-#{component}" do
       action :nothing
