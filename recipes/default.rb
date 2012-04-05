@@ -20,8 +20,8 @@
 include_recipe "java"
 
 root_group = value_for_platform(
-  ["openbsd", "freebsd", "mac_os_x"] => { "default" => "wheel" },
-  "default" => "root"
+  ['openbsd', 'freebsd', 'mac_os_x'] => { 'default' => 'wheel' },
+  'default' => 'root'
 )
 
 group node['logstash']['user_group'] do
@@ -51,71 +51,12 @@ directory "#{node['logstash']['log_path']}" do
   mode 0755
 end
 
-remote_file "#{node['logstash']['install_path']}/logstash-monolithic.jar" do
+remote_file 'logstash.jar' do
+  path "#{node['logstash']['install_path']}/logstash-monolithic.jar"
   source "http://semicomplete.com/files/logstash/logstash-#{node['logstash']['version']}-monolithic.jar"
   owner node['logstash']['user_login']
   group node['logstash']['user_group']
   checksum node['logstash']['checksum']
-  node['logstash']['component'].each do |component|
-    notifies :restart, "service[logstash-#{component}]"
-  end
 end
 
-if node['logstash']['component'].include?('agent') && node['logstash']['default_agent_config']
-
-  case node[:platform]
-  when "redhat","centos","scientific","fedora","suse","arch"
-    apache_log_dir = '/var/log/httpd'
-  when "debian","ubuntu"
-    apache_log_dir = '/var/log/apache2'
-  else
-    apache_log_dir = '/var/log/apache2'
-  end
-
-  template "#{node['logstash']['config_path']}/agent.conf" do
-    source "agent.conf.erb"
-    owner "root"
-    group root_group
-    mode 0644
-    notifies :restart, "service[logstash-agent]"
-    variables(
-      :apache_log_dir => apache_log_dir
-      )
-  end
-
-end
-
-node['logstash']['component'].each do |component|
-  case node['logstash']['init_style']
-  when 'daemonize'
-
-    case node[:platform]
-    when 'redhat', 'centos', 'scientific'
-      include_recipe "yum::epel"
-    
-      package "daemonize" do
-        action :upgrade
-      end
-  
-      template "/etc/init.d/logstash-#{component}" do
-        source "logstash-#{component}.init.erb"
-        owner "root"
-        group root_group
-        mode 0755
-        notifies :restart, "service[logstash-#{component}]"
-      end
-  
-      service "logstash-#{component}" do
-        supports :status => true, :start => true, :stop => true, :restart => true
-        action [:enable, :start]
-      end
-    end
-
-  when 'runit'
-    runit_service "logstash-#{component}"  
-  else
-    service "logstash-#{component}" do
-      action :nothing
-    end
-  end
-end
+include_recipe 'logstash::agent'

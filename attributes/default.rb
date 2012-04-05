@@ -25,10 +25,8 @@ default['logstash']['config_path']  = "/etc/logstash"
 default['logstash']['log_path']     = "/var/log/logstash"
 default['logstash']['pattern_path'] = nil # if you have grok installed, you can set this and the agent will use it
 
-default['logstash']['component'] = [ 'agent', 'web' ]
-
 # set this to false requires you to get your logstash agent config files in :config_path BEFORE this recipe is run
-default['logstash']['default_agent_config'] = true 
+default['logstash']['default_agent_config'] = true
 
 default['logstash']['user_login'] = 'logstash'
 default['logstash']['user_uid']   = 61022
