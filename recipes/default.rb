@@ -119,3 +119,9 @@ node['logstash']['component'].each do |component|
     end
   end
 end
+
+#logstash_section 'input_file' do
+  #type :input
+  #plugin :file
+  #fields :type => "linux-syslog", :path =>  [ "/var/log/*.log", "/var/log/messages", "/var/log/syslog" ]
+#end
