@@ -67,7 +67,6 @@ when 'daemonize'
     service "logstash-#{component}" do
       supports :status => true, :start => true, :stop => true, :restart => true
       action [:enable, :start]
-      subscribes :restart, 'remote_file[logstash.jar]'
     end
   end
 
